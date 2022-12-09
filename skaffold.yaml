@@ -1,0 +1,36 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+build:
+  artifacts:
+    - image: cloudmanager-ui
+      context: ./cloudmanager-ui
+      docker:
+          dockerfile: Dockerfile
+      sync:
+        infer:
+            - "*.js"
+            - "*.html"
+            - "**/*.js"
+    - image: cloudmanager-backend
+      context: ./cloudmanager-backend
+      docker:
+          dockerfile: Dockerfile
+      sync:
+        infer:
+            - "*.js"
+            - "*.html"
+            - "**/*.js"
+deploy:
+  kubectl:
+    manifests:
+      - "./cloudmanager-ui/k8s-pod.yaml"
+      - "./cloudmanager-backend/k8s-pod.yaml"
+portForward:
+  - resourceType: service
+    resourceName: cloudmanager-ui-service
+    port: 80
+    localPort: 3000
+  - resourceType: service
+    resourceName: cloudmanager-backend-service
+    port: 80
+    localPort: 3001
