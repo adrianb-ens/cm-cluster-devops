@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: eoc-orchestrator
+  labels:
+    app.kubernetes.io/name: eoc-orchestrator
+spec:
+  containers:
+  - name: eoc-orchestrator
+    image: eoc-orchestrator
+    ports:
+    - containerPort: 80
+
