@@ -11,6 +11,4 @@
 .kpt-pipeline
 
 # Ignore projects
-cloudmanager-ui/
-cloudmanager-backend/
-cloudmanager-environment-orchestrator/
+src/

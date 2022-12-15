@@ -1,0 +1,9 @@
+dependencies:
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 17.3.16
+- name: common-services
+  repository: https://radiantlogic-devops.github.io/helm
+  version: 1.0.1
+digest: sha256:fbda90e3f6df59d326e7faaf77df207aae9bfd26164890640d3f7c15de83ec7d
+generated: "2022-12-15T12:32:49.785793+02:00"
