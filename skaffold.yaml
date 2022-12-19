@@ -33,7 +33,7 @@ deploy:
   helm:
     releases:
       - name: eoc-all
-        chartPath: ./helm/eoc-all
+        chartPath: ./helm
         artifactOverrides: 
           eoc-ui.image: radiantone/eoc-ui
           eoc-backend.image: radiantone/eoc-backend
@@ -46,27 +46,6 @@ deploy:
           image.orchestrator.repository: "{{.IMAGE_REPO_radiantone_eoc_orchestrator}}"
           image.orchestrator.tag: "{{.IMAGE_TAG_radiantone_eoc_orchestrator}}"
         skipBuildDependencies: true
-      # - name: eoc-ui
-      #   chartPath: ./helm/eoc-ui
-      #   artifactOverrides: 
-      #     eoc-ui.image: radiantone/eoc-ui
-      #   setValueTemplates:
-      #     image.repository: "{{.IMAGE_REPO_radiantone_eoc_ui}}"
-      #     image.tag: "{{.IMAGE_TAG_radiantone_eoc_ui}}"
-      # - name: eoc-backend
-      #   chartPath: ./helm/eoc-backend
-      #   artifactOverrides: 
-      #     eoc-backend.image: radiantone/eoc-backend
-      #   setValueTemplates:
-      #     image.repository: "{{.IMAGE_REPO_radiantone_eoc_backend}}"
-      #     image.tag: "{{.IMAGE_TAG_radiantone_eoc_backend}}"
-      # - name: eoc-orchestrator
-      #   chartPath: ./helm/eoc-orchestrator
-      #   artifactOverrides: 
-      #     eoc-orchestrator.image: radiantone/eoc-orchestrator
-      #   setValueTemplates:
-      #     image.repository: "{{.IMAGE_REPO_radiantone_eoc_orchestrator}}"
-      #     image.tag: "{{.IMAGE_TAG_radiantone_eoc_orchestrator}}"
   # kubectl:
   #   # defaultNamespace: svc
   #   manifests:
