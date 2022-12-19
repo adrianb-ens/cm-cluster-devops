@@ -1,3 +1,24 @@
+ui:
+  image:
+    repository: radiantone/eoc-ui
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+backend:
+  image:
+    repository: radiantone/eoc-backend
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+orchestrator:
+  image:
+    repository: radiantone/eoc-orchestrator
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
 redis:
   enabled: true
   fullnameOverride: redis

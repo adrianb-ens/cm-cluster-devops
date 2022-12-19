@@ -1,6 +1,6 @@
 apiVersion: v2
-name: cloud
-description: Cloud Manager Helm Chart
+name: eoc
+description: Environment Operation Center (EOC) Helm Chart
 
 type: application
 
