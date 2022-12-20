@@ -5,7 +5,7 @@ build:
     - image: radiantone/eoc-ui
       context: ./src/cloudmanager-ui
       docker:
-          dockerfile: Dockerfile
+          dockerfile: Dockerfile.dev
       sync:
         infer:
             - "*.js"
@@ -30,31 +30,33 @@ build:
             - "*.html"
             - "**/*.js"
 deploy:
-  helm:
-    releases:
-      - name: eoc-all
-        chartPath: ./helm
-        artifactOverrides: 
-          eoc-ui.image: radiantone/eoc-ui
-          eoc-backend.image: radiantone/eoc-backend
-          eoc-orchestrator.image: radiantone/eoc-orchestrator
-        setValueTemplates:
-          image.ui.repository: "{{.IMAGE_REPO_radiantone_eoc_ui}}"
-          image.ui.tag: "{{.IMAGE_TAG_radiantone_eoc_ui}}"
-          image.backend.repository: "{{.IMAGE_REPO_radiantone_eoc_backend}}"
-          image.backend.tag: "{{.IMAGE_TAG_radiantone_eoc_backend}}"
-          image.orchestrator.repository: "{{.IMAGE_REPO_radiantone_eoc_orchestrator}}"
-          image.orchestrator.tag: "{{.IMAGE_TAG_radiantone_eoc_orchestrator}}"
-        skipBuildDependencies: true
-  # kubectl:
-  #   # defaultNamespace: svc
-  #   manifests:
-  #     - "./kubernetes/eoc-ui.yaml"
-  #     - "./kubernetes/eoc-backend.yaml"
-  #     - "./kubernetes/eoc-orchestrator.yaml"
+  # statusCheckDeadlineSeconds: 1
+  # helm:
+  #   releases:
+  #     - name: eoc-all
+  #       chartPath: ./helm
+  #       artifactOverrides: 
+  #         eoc-ui.image: radiantone/eoc-ui
+  #         eoc-backend.image: radiantone/eoc-backend
+  #         eoc-orchestrator.image: radiantone/eoc-orchestrator
+  #       setValueTemplates:
+  #         image.ui.repository: "{{.IMAGE_REPO_radiantone_eoc_ui}}"
+  #         image.ui.tag: "{{.IMAGE_TAG_radiantone_eoc_ui}}"
+  #         image.backend.repository: "{{.IMAGE_REPO_radiantone_eoc_backend}}"
+  #         image.backend.tag: "{{.IMAGE_TAG_radiantone_eoc_backend}}"
+  #         image.orchestrator.repository: "{{.IMAGE_REPO_radiantone_eoc_orchestrator}}"
+  #         image.orchestrator.tag: "{{.IMAGE_TAG_radiantone_eoc_orchestrator}}"
+  #       skipBuildDependencies: true
+  kubectl:
+    # defaultNamespace: svc
+    manifests:
+      - "./kubernetes/eoc-ui.yaml"
+      - "./kubernetes/eoc-backend.yaml"
+      - "./kubernetes/eoc-orchestrator.yaml"
 portForward:
   - resourceType: service
     resourceName: eoc-ui-service
+    # port: 80
     port: 80
     localPort: 3000
   - resourceType: service

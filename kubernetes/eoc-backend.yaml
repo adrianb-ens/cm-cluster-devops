@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: eoc-backend
-    image: eoc-backend
+    image: radiantone/eoc-backend
     ports:
     - containerPort: 80
 

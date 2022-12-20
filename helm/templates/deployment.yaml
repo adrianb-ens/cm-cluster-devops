@@ -1,3 +1,5 @@
+{{- if .Values.onlyDependencies }}
+{{- else }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,6 +22,9 @@ spec:
         image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag | default .Chart.AppVersion }}"
         ports:
         - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: {{ template "eoc-ui.fullname" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -43,6 +48,9 @@ spec:
         image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag | default .Chart.AppVersion }}"
         ports:
         - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: {{ template "eoc-backend.fullname" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -66,3 +74,7 @@ spec:
         image: "{{ .Values.orchestrator.image.repository }}:{{ .Values.orchestrator.image.tag | default .Chart.AppVersion }}"
         ports:
         - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: {{ template "eoc-orchestrator.fullname" . }}
+{{- end }}
