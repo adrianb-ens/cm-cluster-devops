@@ -2,8 +2,8 @@ apiVersion: skaffold/v2beta10
 kind: Config
 build:
   artifacts:
-    - image: cloudmanager-ui
-      context: ./cloudmanager-ui
+    - image: radiantone/eoc-ui
+      context: ./src/cloudmanager-ui
       docker:
           dockerfile: Dockerfile
       sync:
@@ -11,8 +11,17 @@ build:
             - "*.js"
             - "*.html"
             - "**/*.js"
-    - image: cloudmanager-backend
-      context: ./cloudmanager-backend
+    - image: radiantone/eoc-backend
+      context: ./src/cloudmanager-backend
+      docker:
+          dockerfile: Dockerfile
+      sync:
+        infer:
+            - "*.js"
+            - "*.html"
+            - "**/*.js"
+    - image: radiantone/eoc-orchestrator
+      context: ./src/cloudmanager-environment-orchestrator
       docker:
           dockerfile: Dockerfile
       sync:
@@ -21,16 +30,38 @@ build:
             - "*.html"
             - "**/*.js"
 deploy:
-  kubectl:
-    manifests:
-      - "./cloudmanager-ui/k8s-pod.yaml"
-      - "./cloudmanager-backend/k8s-pod.yaml"
+  helm:
+    releases:
+      - name: eoc-all
+        chartPath: ./helm
+        artifactOverrides: 
+          eoc-ui.image: radiantone/eoc-ui
+          eoc-backend.image: radiantone/eoc-backend
+          eoc-orchestrator.image: radiantone/eoc-orchestrator
+        setValueTemplates:
+          image.ui.repository: "{{.IMAGE_REPO_radiantone_eoc_ui}}"
+          image.ui.tag: "{{.IMAGE_TAG_radiantone_eoc_ui}}"
+          image.backend.repository: "{{.IMAGE_REPO_radiantone_eoc_backend}}"
+          image.backend.tag: "{{.IMAGE_TAG_radiantone_eoc_backend}}"
+          image.orchestrator.repository: "{{.IMAGE_REPO_radiantone_eoc_orchestrator}}"
+          image.orchestrator.tag: "{{.IMAGE_TAG_radiantone_eoc_orchestrator}}"
+        skipBuildDependencies: true
+  # kubectl:
+  #   # defaultNamespace: svc
+  #   manifests:
+  #     - "./kubernetes/eoc-ui.yaml"
+  #     - "./kubernetes/eoc-backend.yaml"
+  #     - "./kubernetes/eoc-orchestrator.yaml"
 portForward:
   - resourceType: service
-    resourceName: cloudmanager-ui-service
+    resourceName: eoc-ui-service
     port: 80
     localPort: 3000
   - resourceType: service
-    resourceName: cloudmanager-backend-service
+    resourceName: eoc-backend-service
     port: 80
     localPort: 3001
+  - resourceType: service
+    resourceName: haproxy
+    port: 80
+    localPort: 3002

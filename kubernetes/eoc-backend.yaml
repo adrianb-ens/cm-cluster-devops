@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: eoc-backend
+  labels:
+    app.kubernetes.io/name: eoc-backend
+spec:
+  containers:
+  - name: eoc-backend
+    image: eoc-backend
+    ports:
+    - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eoc-backend-service
+spec:
+  selector:
+    app.kubernetes.io/name: eoc-backend
+  ports:
+  - name: eoc-backend-service-port
+    protocol: TCP
+    port: 80
+    targetPort: 3000
