@@ -25,11 +25,6 @@ Write-Output "Done installing Chocolatey!"
 
 Write-Output "Install and setup required"
 Write-Output "tools we must!"
-Write-Output "          .--."
-Write-Output "::\`--._,'.::.`._.--'/::::"
-Write-Output "::::.  ` __::__ '  .::::::"
-Write-Output "::::::-:.`'..`'.:-::::::::"
-Write-Output "::::::::\ `--' /::::::::::"
 Write-Output "Installing Git"
 choco install git -y
 Write-Output "Done installing Git"

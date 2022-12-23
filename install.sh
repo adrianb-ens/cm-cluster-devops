@@ -2,7 +2,7 @@
 
 echo
 echo "###############################"
-echo "#  Cloudmanger setup started  #"
+echo "#      EOC setup started      #"
 echo "###############################"
 echo
 
@@ -17,7 +17,7 @@ git clone git@github.com:radiantlogic-v8/cloudmanager-environment-orchestrator.g
 
 echo
 echo "###############################"
-echo "#   Cloudmanger setup done    #"
+echo "#   EOC microservices added   #"
 echo "###############################"
 echo
 
@@ -27,18 +27,30 @@ echo "###############################"
 echo "#   Please select used OS     #"
 echo "###############################"
 echo 
-# OS Select, Install and setup Env 
 PS3='Please select the OS you are using: '
-options=("Windows" "Mac")
+options=("Windows - Full requirements installation and setup" "Windows - Setup only" "MacOS - Full requirements installation and setup" "MacOS - Setup only" ":q")
 select opt in "${options[@]}"
 do
 	case $opt in
-		"Windows")
+		"Windows - Full requirements installation and setup")
+			echo "Installing requirements and setting up Windows as a Dev Environment for EOC"
+			cd tools/win && ./install_requirements.ps1 && ./setup_env.ps1
+			exit;;
+		"Windows - Setup only")
 			echo "Setting up Windows as a Dev Environment for EOC"
-			cd tools/win && ./install_requirements.ps1 && ./setup_env.ps1;;
-		"Mac")
-			echo "Setting up Mac or Linux as a Dev Environment for EOC"
-			cd tools/mac && chmod +x install_requirements.sh && sh install_requirements.sh && chmod +x setup_env.sh && sh setup_environment.sh;;
+			cd tools/win && ./setup_env.ps1
+			exit;;
+		"MacOS - Full requirements installation and setup")
+			echo "Installing requirements and setting up MacOS as a Dev Environment for EOC"
+			cd tools/mac && chmod +x install_requirements.sh && sh install_requirements.sh && chmod +x setup_env.sh && sh setup_env.sh
+			exit;;
+		"MacOS - Setup only")
+			echo "Setting up MacOS as a Dev Environment for EOC"
+			cd tools/mac && chmod +x setup_env.sh && sh setup_env.sh
+			exit;;
+		":q")
+			echo "Use skaffold dev command to launch the local cluster"
+			exit;;
 		*) exit;;
 	esac
 done
