@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: eoc-orchestrator
-    image: eoc-orchestrator
+    image: radiantone/eoc-orchestrator
     ports:
     - containerPort: 80
 
