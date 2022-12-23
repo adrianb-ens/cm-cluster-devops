@@ -5,7 +5,7 @@ build:
     - image: radiantone/eoc-ui
       context: ./src/cloudmanager-ui
       docker:
-          dockerfile: Dockerfile.dev
+          dockerfile: Dockerfile
       sync:
         infer:
             - "*.js"
