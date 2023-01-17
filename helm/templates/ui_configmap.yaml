@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  VITE_BASE_URL: {{ .Values.ui.apiBaseUrl | quote }}
+  VITE_TOKEN_STORE_KEY: {{ .Values.ui.auth.tokenStoreKey | quote }}
+  VITE_LOGIN_URL: {{ .Values.ui.auth.loginReturnUrl | quote }}
+kind: ConfigMap
+metadata:
+  labels:
+    role: eoc-ui
+  name: {{ template "eoc-ui.fullname" . }}
+  labels:
+    app: {{ template "eoc-ui.fullname" . }}
+    chart: "{{ template "eoc-ui.chart" . }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"

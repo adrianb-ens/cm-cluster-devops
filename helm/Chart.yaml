@@ -25,7 +25,7 @@ dependencies:
   version: 17.3.16
   repository: https://charts.bitnami.com/bitnami
   condition: redis.enabled
-- name: common-services
-  version: 1.0.1
-  repository: https://radiantlogic-devops.github.io/helm
-  condition: common-services.enabled
+# - name: common-services
+#   version: 1.0.1
+#   repository: https://radiantlogic-devops.github.io/helm
+#   condition: common-services.enabled

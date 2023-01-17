@@ -1,27 +1,3 @@
-#############################
-###       UI Config       ###
-#############################
-apiVersion: v1
-data:
-  VITE_BASE_URL: {{ .Values.ui.apiBaseUrl | quote }}
-  VITE_TOKEN_STORE_KEY: {{ .Values.ui.auth.tokenStoreKey | quote }}
-  VITE_LOGIN_URL: {{ .Values.ui.auth.loginReturnUrl | quote }}
-kind: ConfigMap
-metadata:
-  labels:
-    role: eoc-ui
-  name: {{ template "eoc-ui.fullname" . }}
-  labels:
-    app: {{ template "eoc-ui.fullname" . }}
-    chart: "{{ template "eoc-ui.chart" . }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-
----
-
-#############################
-###    Backend Config     ###
-#############################
 apiVersion: v1
 data:
   BULL_REDIS_URL: {{ .Values.backend.redis.bullUrl | quote }}
@@ -62,25 +38,5 @@ metadata:
   labels:
     app: {{ template "eoc-backend.fullname" . }}
     chart: "{{ template "eoc-backend.chart" . }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-
----
-
-#############################
-###  Orchestrator Config  ###
-#############################
-apiVersion: v1
-data:
-  REDIS_HOST: {{ .Values.orchestrator.redis.host | quote }}
-  REDIS_PORT: {{ .Values.orchestrator.redis.port | quote }}
-kind: ConfigMap
-metadata:
-  labels:
-    role: eoc-orchestrator
-  name: {{ template "eoc-orchestrator.fullname" . }}
-  labels:
-    app: {{ template "eoc-orchestrator.fullname" . }}
-    chart: "{{ template "eoc-orchestrator.chart" . }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
