@@ -1,0 +1,28 @@
+{{- if .Values.onlyDependencies }}
+{{- else }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "eoc-ui.fullname" . }}-service
+spec:
+  ports:
+    - name: {{ include "eoc-ui.fullname" . }}-service-port
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    {{- include "eoc-ui.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "eoc-backend.fullname" . }}-service
+spec:
+  ports:
+    - name: {{ include "eoc-backend.fullname" . }}-service-port
+      protocol: TCP
+      port: 80
+      targetPort: 3000
+  selector:
+    {{- include "eoc-backend.selectorLabels" . | nindent 4 }}
+{{- end }}
