@@ -1,13 +1,26 @@
 global:
-  region: us-west-2
-  domainName: dc.federated-identity.com
-  certificateArn: arn:aws:acm:us-west-2:967346104358:certificate/7e5a2401-8894-4514-8ed4-3a37553ce43a
+  region: 
+  domainName: 
+  certificateArn: 
+  infrastructureName: 
+  prodEnvLimit: 1
+  nonprodEnvLimit: 2
+  fidLicense: 
 
 ui:
-  apiBaseUrl: http://127.0.0.1:3001
+  basePath: /eoc
+  # example https://{fqdm}/eoc-backend
+  apiBaseUrl: 
   auth:
+    # local storage key to store jwt token
     tokenStoreKey: token
-    loginReturnUrl: http://127.0.0.1:3000/login
+    # example https://{fqdm}
+    loginReturnUrl: 
+  # full external links to public grafana dashboard
+  reportingDashboardUrl: 
+  monitoringDashboardUrl: 
+  #override infrastructure name used for environment name prefix
+  infrastructureName: 
   image:
     repository: radiantone/eoc-ui
     pullPolicy: Always
@@ -18,31 +31,32 @@ ui:
   affinity: {}
 
 backend:
+  basePath: eoc-backend
   redis:
     #redundant, will be removed
     bullUrl: redis://redis-headless:6379
     host: redis-headless
     port: 6379
   database:
-    name: cloudmanager
-    schema: public
-    host: postgresql-hl
+    name: eocdb
+    schema: eoc
+    host: postgresql
     port: 5432
     auth:
-      user: postgres
-      pass: postgres
+      user: eocadmin
+      pass: 
   jwt:
     secret: mySecret
-    expiresIn: 15m
+    expiresIn: 60m
   oauth:
     # Get them from https://console.cloud.google.com/apis/credentials
     google:
-      clientId: aaa
-      clientSecret: aaa
+      clientId: 
+      clientSecret: 
     # Get them from https://github.com/settings/developers
     github:
-      clientId: aaa
-      clientSecret: aaa
+      clientId: 
+      clientSecret: 
   # mailer module
   smtp:
     user: user@outlook.com
@@ -58,6 +72,14 @@ backend:
   #APP_ROOT_DIRECTORY=${HOME}/.cloudmanager
   # Custom value (if running as a systemd service for example)
   appRootDirectory: /var/lib/cloudmanager
+  # Should consist of exactly 32 bytes because of the AES256 encryption algorithm usage
+  encryptionKey: 
+  grafana:
+    host: http://grafana
+    # used to create a service account for managing alerts and integrations
+    # should have enough permission to be able to create a service account
+    username: 
+    password: 
   image:
     repository: radiantone/eoc-backend
     pullPolicy: Always
@@ -68,6 +90,20 @@ backend:
   affinity: {}
 
 orchestrator:
+  duplo:
+    token: 
+    baseUrl: 
+    servicesTenantName: 
+  git:
+    # ssh repo url
+    repo: 
+    privateKey: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      {private key needs to be multiline}
+      -----END OPENSSH PRIVATE KEY-----
+  argocd:
+    baseUrl: http://argocd-server/argocd/api/v1
+    token: 
   redis:
     host: redis-headless
     port: 6379
@@ -95,7 +131,10 @@ redis:
     ## @param replica.replicaCount Number of Redis&reg; replicas to deploy
     ##
     replicaCount: 0
-<<<<<<< HEAD
+  master:
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
 # common-services:
 #   postgresql:
 #     global:
@@ -204,113 +243,3 @@ redis:
 #       backend eoc_backend
 #         # http-request set-path %[path,regsub(^/eoc-backend/?,/)]
 #         server eoc-backend-service eoc-backend-service:80
-=======
-common-services:
-  postgresql:
-    global:
-      postgresql:
-        auth:
-          postgresPassword: "postgres"
-    auth:
-      ## @param auth.enablePostgresUser Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user
-      ##
-      enablePostgresUser: true
-      ## @param auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided
-      ##
-      postgresPassword: "postgres"
-      ## @param auth.username Name for a custom user to create
-      ##
-      username: "postgres"
-      ## @param auth.password Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided
-      ##
-      password: "postgres"
-      ## @param auth.database Name for a custom database to create
-      ##
-      database: "cloudmanager"
-      ## @param auth.replicationUsername Name of the replication user
-      ##
-      replicationUsername: repl_user
-      ## @param auth.replicationPassword Password for the replication user. Ignored if `auth.existingSecret` with key `replication-password` is provided
-      ##
-      replicationPassword: ""
-      ## @param auth.existingSecret Name of existing secret to use for PostgreSQL credentials. `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret. The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case.
-      ##
-      existingSecret: ""
-      ## @param auth.secretKeys.adminPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
-      ## @param auth.secretKeys.userPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
-      ## @param auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
-      ##
-      secretKeys:
-        adminPasswordKey: postgres-password
-        userPasswordKey: password
-        replicationPasswordKey: replication-password
-      ## @param auth.usePasswordFiles Mount credentials as a files instead of using an environment variable
-      ##
-      usePasswordFiles: false
-    readReplicas:
-        ## @param readReplicas.replicaCount Number of PostgreSQL read only replicas
-        ##
-        replicaCount: 0
-
-  haproxy:
-    enabled: true
-    fullnameOverride: haproxy
-    nodeSelector: {}
-    service:
-      type: NodePort
-    config: |
-      defaults
-        timeout connect 10s
-        timeout client 30s
-        timeout server 30s
-        log global
-        mode http
-        option httplog
-        maxconn 3000
-      frontend http-in
-        bind *:80
-        stats enable
-        stats refresh 30s
-        stats show-node
-        stats uri /stats
-        monitor-uri /healthz
-        use_backend argocd_backend if { path /argocd } or { path_beg /argocd/ }
-        use_backend grafana_backend if { path /grafana } or { path_beg /grafana/ }
-        use_backend kibana_backend if { path /kibana } or { path_beg /kibana/ }
-        use_backend elasticsearch_backend if { path /elasticsearch } or { path_beg /elasticsearch/ }
-        use_backend prometheus_backend if { path /prometheus } or { path_beg /prometheus/ }
-        use_backend alertmanager_backend if { path /alertmanager } or { path_beg /alertmanager/ }
-        use_backend pushgateway_backend if { path /pushgateway } or { path_beg /pushgateway/ }
-        use_backend pgadmin4_backend if { path /pgadmin4 } or { path_beg /pgadmin4/ }
-        use_backend eoc_ui if { path /eoc-ui } or { path_beg /eoc-ui/ }
-        use_backend eoc_backend if { path /eoc-backend } or { path_beg /eoc-backend/ }
-      backend argocd_backend
-        server argocd argocd-server:80
-      backend grafana_backend
-        http-request set-path %[path,regsub(^/grafana/?,/)]
-        server grafana grafana:80
-      backend kibana_backend
-        http-request set-path %[path,regsub(^/kibana/?,/)]
-        server kibana kibana:5601
-      backend elasticsearch_backend
-        http-request set-path %[path,regsub(^/elasticsearch/?,/)]
-        server elasticsearch elasticsearch-master:9200
-      backend prometheus_backend
-        http-request set-path %[path,regsub(^/prometheus/?,/)]
-        server prometheus prometheus-server:80
-      backend alertmanager_backend
-        http-request set-path %[path,regsub(^/alertmanager/?,/)]
-        server alertmanager prometheus-alertmanager:80
-      backend pushgateway_backend
-        http-request set-path %[path,regsub(^/pushgateway/?,/)]
-        server pushgateway prometheus-pushgateway:9091
-      backend pgadmin4_backend
-        server pgadmin4 pgadmin4:80
-      backend eoc_ui
-        # try without this
-        # http-request set-path %[path,regsub(^/eoc-ui/?,/)]
-        server eoc-ui-service eoc-ui-service:80
-      backend eoc_backend
-        # http-request set-path %[path,regsub(^/eoc-backend/?,/)]
-        server eoc-backend-service eoc-backend-service:80
->>>>>>> 9d2c8480bbdc83929e41465a8a22128b130619b5

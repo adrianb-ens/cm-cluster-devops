@@ -1,7 +1,24 @@
 apiVersion: v1
 data:
+  REGION: {{ .Values.global.region | quote }}
+  DOMAIN_NAME: {{ .Values.global.domainName | quote }}
+  CERTIFICATE_ARN: {{ .Values.global.certificateArn | quote }}
+
   REDIS_HOST: {{ .Values.orchestrator.redis.host | quote }}
   REDIS_PORT: {{ .Values.orchestrator.redis.port | quote }}
+
+  DUPLO_PLAN_ID: {{ .Values.global.infrastructureName | quote }}
+  DUPLO_TOKEN: {{ .Values.orchestrator.duplo.token | quote }}
+  DUPLO_BASE_URL: {{ .Values.orchestrator.duplo.baseUrl | quote }}
+  DUPLO_SERVICES_TENANT_NAME: {{ .Values.orchestrator.duplo.servicesTenantName | quote }}
+
+  ARGO_CD_BASE_URL: {{ .Values.orchestrator.argocd.baseUrl | quote }}
+  ARGO_CD_TOKEN: {{ .Values.orchestrator.argocd.token | quote }}
+  
+  FID_LICENSE_KEY: {{ .Values.global.fidLicense | quote }}
+
+  GIT_REPO: {{ .Values.orchestrator.git.repo | quote }}
+  GIT_PRIVATE_KEY: {{ .Values.orchestrator.git.privateKey | quote }}
 kind: ConfigMap
 metadata:
   labels:

@@ -18,6 +18,7 @@ spec:
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.orchestrator.image.repository }}:{{ .Values.orchestrator.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.orchestrator.image.pullPolicy }}
         ports:
         - containerPort: 80
         envFrom:

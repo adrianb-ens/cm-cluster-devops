@@ -1,8 +1,12 @@
 apiVersion: v1
 data:
+  VITE_BASE_PATH: {{ .Values.ui.basePath | quote }}
   VITE_BASE_URL: {{ .Values.ui.apiBaseUrl | quote }}
   VITE_TOKEN_STORE_KEY: {{ .Values.ui.auth.tokenStoreKey | quote }}
   VITE_LOGIN_URL: {{ .Values.ui.auth.loginReturnUrl | quote }}
+  VITE_DUPLO_PLAN_NAME: {{ default .Values.global.infrastructureName .Values.ui.infrastructureName | quote }}
+  VITE_REPORTING_URL: {{ .Values.ui.reportingDashboardUrl | quote }}
+  VITE_MONITORING_URL: {{ .Values.ui.monitoringDashboardUrl | quote }}
 kind: ConfigMap
 metadata:
   labels:
